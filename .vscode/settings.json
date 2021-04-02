@@ -1,0 +1,25 @@
+{
+    "files.associations": {
+        "cstddef": "cpp",
+        "random": "cpp",
+        "functional": "cpp",
+        "iostream": "cpp",
+        "array": "cpp",
+        "chrono": "cpp",
+        "compare": "cpp",
+        "memory": "cpp",
+        "ratio": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "xmemory": "cpp",
+        "xtr1common": "cpp",
+        "xutility": "cpp",
+        "string_view": "cpp",
+        "cstdlib": "cpp",
+        "optional": "cpp",
+        "regex": "cpp",
+        "system_error": "cpp",
+        "xlocnum": "cpp"
+    }
+}
