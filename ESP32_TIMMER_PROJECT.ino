@@ -203,17 +203,20 @@ void StartPV(void *pvParameters)
     if (timmer > 0 && state_start == true)
     {
       digitalWrite(highvoltage, HIGH);
+      digitalWrite(LEDPIN, HIGH);
       timmer = timmer - 1;
     }
     else
     {
       digitalWrite(highvoltage, LOW);
+      digitalWrite(LEDPIN, LOW);
     }
 
     if (timmer <= 0)
     {
       timmer = 0;
       state_start = false;
+      
     }
     vTaskDelay(1000);
   }
@@ -221,14 +224,12 @@ void StartPV(void *pvParameters)
 
 void click_quickstart()
 {
-  digitalWrite(LEDPIN, HIGH);
   timmer = timmer + 30;
   state_start = true;
 }
 
 void click_pause()
 {
-  digitalWrite(LEDPIN, HIGH);
   if (state_start)
   {
     state_start = false;
@@ -280,7 +281,7 @@ void timmerPV(void *pvParameters)
         down_time = millis() - milibuttonchange;
         if (down_time > 1000)
         {
-          if (timmer >= 5)
+          if (timmer >= 12)
           {
             timmer = timmer - 12;
             //show timer to lcd
@@ -306,7 +307,7 @@ void timmerPV(void *pvParameters)
     }
     else
     {
-      digitalWrite(LEDPIN, LOW);
+      // digitalWrite(LEDPIN, LOW);
     }
 
     int pause_button_state = digitalRead(pausebutton);
@@ -318,7 +319,7 @@ void timmerPV(void *pvParameters)
     }
     else
     {
-      digitalWrite(LEDPIN, LOW);
+      // digitalWrite(LEDPIN, LOW);
     }
 
     if (pause_button_state == LOW)
@@ -506,12 +507,12 @@ void vControl(AsyncWebServerRequest *request)
   // String timhtml = "<h2>Timmer : </h2>";
   // timhtml += String("Free Memory is ") + String(ESP.getFreeHeap());
   // request->send(200, "text/html", timhtml + style1);
-  String button0 = "<script>function function2(){var xhr=new XMLHttpRequest();xhr.withCredentials=!0;xhr.addEventListener('readystatechange',function(){if(this.readyState===4){console.log(this.responseText)}});xhr.open('GET','http://192.168.2.36/apipause');xhr.send()};function function1(){var e,t;e=`0=${document.getElementById('Hourdropdown1').value}&1=${document.getElementById('Mindropdown').value}`,(t=new XMLHttpRequest).withCredentials=!0,t.addEventListener('readystatechange',function(){4===this.readyState&&console.log(this.responseText)}),t.open('POST','/set'),t.setRequestHeader('Content-Type','application/x-www-form-urlencoded'),t.send(e)};function funcbutton0() {var xhr=new XMLHttpRequest();xhr.withCredentials=!0;xhr.addEventListener('readystatechange',function(){if(this.readyState===4){}});xhr.open('GET','/apiquickstart');xhr.send()}</script>";
+  String button0 = "<script>function function2(){var xhr=new XMLHttpRequest();xhr.withCredentials=!0;xhr.addEventListener('readystatechange',function(){if(this.readyState===4){console.log(this.responseText)}});xhr.open('GET','/apipause');xhr.send()};function function1(){var e,t;e=`0=${document.getElementById('Hourdropdown1').value}&1=${document.getElementById('Mindropdown').value}`,(t=new XMLHttpRequest).withCredentials=!0,t.addEventListener('readystatechange',function(){4===this.readyState&&console.log(this.responseText)}),t.open('POST','/set'),t.setRequestHeader('Content-Type','application/x-www-form-urlencoded'),t.send(e)};function funcbutton0() {var xhr=new XMLHttpRequest();xhr.withCredentials=!0;xhr.addEventListener('readystatechange',function(){if(this.readyState===4){}});xhr.open('GET','/apiquickstart');xhr.send()}</script>";
   String tex1web;
   // tex1web = "<meta http-equiv='refresh' content='1'/>";
   tex1web = "<body><h2>" + String("Cooking is = ") + "<span id='showtime'></span></h2>";
   tex1web += "<br><br>";
-  tex1web += "<div id='Hourdropdown'><select id='Hourdropdown1' name='HourSelect' class='HourSelect'> <option value='0'>--Select Hour--</option> </select><select id='Mindropdown' name='MinSelect' class='MinSelect'> <option value='0'>--Select Minutes--</option> </select><br></div><script>window.onload=function(){var e,o,n,t;for(e=document.getElementById('Hourdropdown').getElementsByTagName('select')[0],o=0;o<=23;o++)(t=new Option).text=o+' HH',t.value=o,e.options[o]=t;for(n=document.getElementById('Mindropdown'),o=0;o<=59;o++)(t=new Option).text=o+' MM',t.value=o,n.options[o]=t}</script>";
+  tex1web += "<div id='Hourdropdown'><select id='Hourdropdown1' name='HourSelect' class='HourSelect'> <option value='0'>--Select Hour--</option> </select><select id='Mindropdown' name='MinSelect' class='MinSelect'> <option value='0'>--Select Minutes--</option> </select><br></div><script>window.onload=function(){var e,o,n,t;for(e=document.getElementById('Hourdropdown').getElementsByTagName('select')[0],o=0;o<=99;o++)(t=new Option).text=o+' MM',t.value=o,e.options[o]=t;for(n=document.getElementById('Mindropdown'),o=0;o<=59;o++)(t=new Option).text=o+' SS',t.value=o,n.options[o]=t}</script>";
   tex1web += "<p></p><br><center><a class='w3-button w3-deep-orange' onclick='funcbutton0()'>Quick Start</a><a onclick='function1()' class='w3-button w3-deep-orange'>Set time</a><a onclick='function2()' class='w3-button w3-deep-orange'>RUN / PAUSE</a></center>";
   tex1web += "</body>";
   request->send(200, "text/html", style1 + tex1web + script + button0);
@@ -566,7 +567,7 @@ void vcheckip(AsyncWebServerRequest *request)
   String checkip = "", youip = "";
   checkip = "<h1>Check Your IP...</h1> ";
   checkip += "Your IP in home : ";
-  checkip += " " + WiFi.softAPIP().toString() + "<br><br>\n\n";
+  checkip += " " + WiFi.softAPIP().toString() + " : " + WiFi.localIP().toString() + "<br><br>\n\n";
   // }
   checkip += "<a href =\"/\"><button>Back</button></a>";
 
